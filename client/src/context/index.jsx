@@ -2,12 +2,11 @@ import React, { useContext, createContext } from 'react';
 
 import { useAddress, useContract, useMetamask, useContractWrite } from '@thirdweb-dev/react';
 import { ethers } from 'ethers';
-import { EditionMetadataWithOwnerOutputSchema } from '@thirdweb-dev/sdk';
 
 const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
-  const { contract } = useContract('your address');
+  const { contract } = useContract(process.env.VITE_CONTRACT_ADDRESS);
   const { mutateAsync: createCampaign } = useContractWrite(contract, 'createCampaign');
 
   const address = useAddress();
@@ -20,7 +19,7 @@ export const StateContextProvider = ({ children }) => {
         form.title, // title
         form.description, // description
         form.target,
-        new Date(form.deadline).getTime(), // deadline,
+        Math.floor(new Date(form.deadline).getTime() / 1000), // deadline,
         form.image
       ])
 
